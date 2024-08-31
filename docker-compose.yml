@@ -2,4 +2,4 @@ services:
     api:
         build: ./api
         volumes:
-            - ./api/data:/app/api/data
+            - ./data:/app/data:rw

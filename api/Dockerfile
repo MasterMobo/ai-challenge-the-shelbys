@@ -1,6 +1,9 @@
 # Use the official Python 3.9 image as the base image
 FROM python:3.9
 
+# Install FFMPEG
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -14,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set the command to run the application
-CMD [ "python", "./src/main.py" ]
+CMD [ "python", "./src/keyframeExtractor.py" ]

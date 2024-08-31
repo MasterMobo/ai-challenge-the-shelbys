@@ -3,36 +3,30 @@ import numpy as np
 import os
 import torch
 import clip
-import clipEmbedding
 import clipIndex
+import queryEncoder
+import Mapper
+from config import *
 
+# SEARCH QUERY GOES HERE!
+query = "female reporter"
 
-# Load CLIP embeddings
-clip_dir = "./data/clip-features-vit-b32-sample"
-clip_destination = "./out/clip-embeddings.npy"
+queryEncoder = queryEncoder.queryEncoder()  # Initialize the query encoder
+encoded_query = queryEncoder.text_to_embedding(query)  # Encode the query
 
-clip_embeddings = clipEmbedding.combine_clip_embeddings(clip_dir)
-clipEmbedding.save_clip_embeddings(clip_embeddings, clip_destination)
+faissSearcher = faissSearcher.faissSearcher() # Initialize the faiss searcher
+clipIndex = clipIndex.clipIndex() # Initialize the clip index
 
-# Save CLIP indexes
-keyframe_map_dir = './data/map-keyframes'
-clip_index_destination = './out/clip-indexes.csv'
+faissSearcher.write_faiss_index() # Write the faiss index
+result_distances, result_indices = faissSearcher.search_frames(encoded_query, top_k=5)
 
-clipIndex.save_clip_indexes(keyframe_map_dir, clip_index_destination)
-
-# Index FAISS
-faiss_index_dir = './out/faiss-index'
-
-faissSearcher.write_faiss_index(clip_embeddings, faiss_index_dir)
-faiss_index = faissSearcher.read_faiss_index(faiss_index_dir)
-
-# Search for similar frames
-query = "Diver underwater hitting coral reef with hammer"
-result_distances, result_indices = faissSearcher.search_frames(faiss_index, query, top_k=5)
 print(result_indices)
 
 # Retrieve and display the results
 for indexes in result_indices:
     for idx in indexes:
-        result = clipIndex.look_up_clip_index(clip_index_destination, idx)
+        result = clipIndex.look_up_clip_index(idx)
         print(result)
+        frame_idx = result['frame_idx'].astype('int32')
+        # timestamp = Mapper.frame_index_to_timestamp(frame_idx)
+        # print(f"Frame index: {frame_idx}     Timestamp: {timestamp}")

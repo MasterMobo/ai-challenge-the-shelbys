@@ -8,6 +8,7 @@ import config
 class clipEmbedding:
     def __init__(self):
         pass
+
     
     def combine_clip_embeddings(self, clip_dir):
         clip_files = []
@@ -29,5 +30,6 @@ class clipEmbedding:
         
         return clip_embeddings
 
-    def save_clip_embeddings(clip_embeddings, destination):
-        np.save(destination, clip_embeddings)
+
+# def save_clip_embeddings(clip_embeddings, destination):
+#     np.save(destination, clip_embeddings)

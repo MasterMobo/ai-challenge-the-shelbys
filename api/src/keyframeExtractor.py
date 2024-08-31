@@ -39,11 +39,11 @@ class KeyframeExtractor:
         # Extract video name
         video_name = os.path.splitext(os.path.basename(video_path))[0]
 
-        #ffmpeg command to detect shots
+        # ffmpeg command to detect shots
         command = [
             'ffmpeg',
             '-i', video_path,
-            '-vf', f"select='gt(scene,{self.scene_threshold})',showinfo",
+            '-vf', f"select='eq(n\,0)+gt(scene,{self.scene_threshold})',showinfo",
             '-vsync', 'vfr',
             '-q:v', '2', 
             '-frame_pts', 'true',

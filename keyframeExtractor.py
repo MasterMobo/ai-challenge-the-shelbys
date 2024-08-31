@@ -4,7 +4,7 @@ import re
 import csv
 from pathlib import Path
 
-class ShotDetector:
+class KeyframeExtractor:
     def __init__(self, scene_threshold=0.3):
         self.scene_threshold = scene_threshold
 
@@ -93,8 +93,8 @@ class ShotDetector:
 
 # Usage example
 data_dir = './Video'
-output_dir = './test'
+output_dir = './data/keyframes'
 
-detector = ShotDetector(scene_threshold=0.3)
+detector = KeyframeExtractor(scene_threshold=0.3)
 
 detector.process_videos(data_dir, output_dir)

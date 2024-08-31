@@ -4,13 +4,22 @@ import os
 import torch
 import clip
 import clipIndex
+import queryEncoder
 import Mapper
-
+from config import *
 
 # SEARCH QUERY GOES HERE!
-query = "Diver underwater hitting coral reef with hammer"
+query = "female reporter"
 
-result_distances, result_indices = faissSearcher.search_frames(query, top_k=5)
+queryEncoder = queryEncoder.queryEncoder()  # Initialize the query encoder
+encoded_query = queryEncoder.text_to_embedding(query)  # Encode the query
+
+faissSearcher = faissSearcher.faissSearcher() # Initialize the faiss searcher
+clipIndex = clipIndex.clipIndex() # Initialize the clip index
+
+faissSearcher.write_faiss_index() # Write the faiss index
+result_distances, result_indices = faissSearcher.search_frames(encoded_query, top_k=5)
+
 print(result_indices)
 
 # Retrieve and display the results

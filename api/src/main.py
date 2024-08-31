@@ -9,18 +9,19 @@ import clipIndex
 
 # Load CLIP embeddings
 clip_dir = "./data/clip-features-vit-b32-sample"
+clip_destination = "./out/clip-embeddings.npy"
 
 clip_embeddings = clipEmbedding.combine_clip_embeddings(clip_dir)
-clipEmbedding.save_clip_embeddings(clip_embeddings, "./data/clip-embeddings.npy")
+clipEmbedding.save_clip_embeddings(clip_embeddings, clip_destination)
 
 # Save CLIP indexes
 keyframe_map_dir = './data/map-keyframes'
-clip_index_destination = './data/clip-indexes.csv'
+clip_index_destination = './out/clip-indexes.csv'
 
 clipIndex.save_clip_indexes(keyframe_map_dir, clip_index_destination)
 
 # Index FAISS
-faiss_index_dir = './data/faiss-index'
+faiss_index_dir = './out/faiss-index'
 
 faissSearcher.write_faiss_index(clip_embeddings, faiss_index_dir)
 faiss_index = faissSearcher.read_faiss_index(faiss_index_dir)

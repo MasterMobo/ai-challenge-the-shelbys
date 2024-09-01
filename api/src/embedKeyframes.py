@@ -2,7 +2,7 @@ import torch
 import clip
 from PIL import Image
 from pathlib import Path
-import numpy as np  # Import numpy
+import numpy as np
 
 class KeyframeEmbedder:
     data_dir = './data/keyframes2'
@@ -17,27 +17,33 @@ class KeyframeEmbedder:
         
         folder_paths = data_path.iterdir()
         
-        keyframe_images = []
+        keyframe_images = None
         # Process each folder
         for folder_path in folder_paths:
             print(f"Processing folder: {folder_path.name}")
             if folder_path.is_dir():
-                print(f"Processing folder: {folder_path.name}")
-                keyframe_paths = folder_path.iterdir()
+                keyframe_paths = list(folder_path.iterdir())
 
-                for keyframe_path in keyframe_paths:
-                    
-                    image = Image.open(keyframe_path)
-                    keyframe_images.append(self.preprocess(image).to(self.device))
+                # Process keyframes within the folder
+                folder_images = [self.preprocess(Image.open(p)).unsqueeze(0).to(self.device) for p in keyframe_paths]
 
-        print(f"Loaded {len(keyframe_images)} keyframes")
+                # Stack them into a tensor and concatenate
+                folder_tensor = torch.cat(folder_images, dim=0)
+                
+                if keyframe_images is None:
+                    keyframe_images = folder_tensor
+                else:
+                    keyframe_images = torch.cat((keyframe_images, folder_tensor), dim=0)
 
-        # Stack images into a batch
-        image_tensor = torch.stack(keyframe_images)
+        if keyframe_images is None:
+            print("No keyframes found.")
+            return None, None
+
+        print(f"Loaded {keyframe_images.size(0)} keyframes")
 
         # Generate embeddings
         with torch.no_grad():
-            image_features = self.model.encode_image(image_tensor)
+            image_features = self.model.encode_image(keyframe_images)
 
         # Save embeddings with the folder name as a .npy file
         output_path = Path(f'./out/{folder_path.name}.npy')
@@ -46,10 +52,10 @@ class KeyframeEmbedder:
     def save_embeddings(self, embeddings, output_path):
         # Convert the embeddings to numpy array
         embeddings_numpy = embeddings.cpu().numpy()
-
-         # Print the shape of the numpy array
+        
+        # Print the shape of the numpy array
         print(f"Shape of the embeddings: {embeddings_numpy.shape}")
-
+        
         # Save the numpy array
         np.save(output_path, embeddings_numpy)
         print(f"Embeddings saved to {output_path}")

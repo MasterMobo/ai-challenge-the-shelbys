@@ -16,7 +16,7 @@ encoded_query = queryEncoder.text_to_embedding(query)  # Encode the query
 
 faissSearcher = faissSearcher.faissSearcher() # Initialize the faiss searcher
 clipIndex = clipIndex.clipIndex() # Initialize the clip index
-
+    
 faissSearcher.write_faiss_index() # Write the faiss index
 result_distances, result_indices = faissSearcher.search_frames(encoded_query, top_k=5)
 

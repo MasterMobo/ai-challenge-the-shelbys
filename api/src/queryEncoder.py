@@ -5,11 +5,11 @@ import clip
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device, jit=False)
 
-class queryEncoder:
+class QueryEncoder:
     def __init__(self):
         pass
     
-    def text_to_embedding(self, query):
+    def textToEmbedding(self, query):
         with torch.no_grad():
             text_tokens = clip.tokenize([query]).to(device)
             text_features = model.encode_text(text_tokens)

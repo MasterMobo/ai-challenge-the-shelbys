@@ -2,6 +2,7 @@ import torch
 import clip
 from PIL import Image
 from pathlib import Path
+import numpy as np  # Import numpy
 
 class KeyframeEmbedder:
     data_dir = './data/keyframes2'
@@ -38,12 +39,19 @@ class KeyframeEmbedder:
         with torch.no_grad():
             image_features = self.model.encode_image(image_tensor)
 
-        # Save embeddings with the folder name
-        output_path = Path(f'./out/{folder_path.name}.pt')
+        # Save embeddings with the folder name as a .npy file
+        output_path = Path(f'./out/{folder_path.name}.npy')
         self.save_embeddings(image_features, output_path)
 
     def save_embeddings(self, embeddings, output_path):
-        torch.save(embeddings.cpu(), output_path)
+        # Convert the embeddings to numpy array
+        embeddings_numpy = embeddings.cpu().numpy()
+
+         # Print the shape of the numpy array
+        print(f"Shape of the embeddings: {embeddings_numpy.shape}")
+
+        # Save the numpy array
+        np.save(output_path, embeddings_numpy)
         print(f"Embeddings saved to {output_path}")
 
 

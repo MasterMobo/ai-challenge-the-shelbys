@@ -5,16 +5,14 @@ from pathlib import Path
 
 class KeyframeEmbedder:
     data_dir = './data/keyframes2'
-    output_dir = './out/clip_embeddings'
 
     def __init__(self):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model, self.preprocess = clip.load("ViT-B/32", device=self.device)
 
-    def embed_keyframes_from_folder(self, folder_path: str):
+    def embed_keyframes_from_folder(self):
         # Create paths from directory
         data_path = Path(self.data_dir)
-        output_path = Path(self.output_dir)
         
         folder_paths = data_path.iterdir()
         
@@ -40,7 +38,9 @@ class KeyframeEmbedder:
         with torch.no_grad():
             image_features = self.model.encode_image(image_tensor)
 
-        return image_features, keyframe_paths
+        # Save embeddings with the folder name
+        output_path = Path(f'./out/{folder_path.name}.pt')
+        self.save_embeddings(image_features, output_path)
 
     def save_embeddings(self, embeddings, output_path):
         torch.save(embeddings.cpu(), output_path)
@@ -49,6 +49,4 @@ class KeyframeEmbedder:
 
 if __name__ == "__main__":
     embedder = KeyframeEmbedder()
-    folder_path = './././keyframes/L01_V001'  # Specify the path to your keyframes folder
-    embeddings, keyframe_paths = embedder.embed_keyframes_from_folder(folder_path)
-    embedder.save_embeddings(embeddings, './out/clip_embeddings')
+    embedder.embed_keyframes_from_folder()

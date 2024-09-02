@@ -32,7 +32,7 @@ class KeyframeEmbedder:
             videos = [CLIPModel.preprocess(Image.open(p)).unsqueeze(0).to(CLIPModel.device) for p in sorted_keyframe_paths]
 
             # Stack them into a tensor and concatenate
-            keyframe_images = CLIPModel.torch.cat(videos, dim=0)
+            keyframe_images = torch.cat(videos, dim=0)
 
             print(f"Loaded {keyframe_images.size(0)} keyframes")
 

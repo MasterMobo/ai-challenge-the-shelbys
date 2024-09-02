@@ -4,6 +4,7 @@ from queryEncoder import QueryEncoder
 from faissSearcher import FAISSSearcher
 from clipIndex import ClipIndexLookup
 import time
+
 class VideoSearcher:
 
     def search(self, query: str):

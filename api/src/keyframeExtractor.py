@@ -26,72 +26,69 @@ class KeyframeExtractor:
         # Create directories if they don't exist
         os.makedirs(self.keyframe_output_path, exist_ok=True)
         os.makedirs(self.metadata_output_path, exist_ok=True)
-
-        folder_paths = self.data_path.iterdir()
-
-        with open(self.metadata_processed_path, 'a', newline='') as out_f:
-            csv_writer = csv.writer(out_f)
-            #  Headers
-            csv_writer.writerow(['video_name', 'frame_index', 'timestamp', 'pts_time', 'clip_index'])
         
-        # Process each folder
-        for folder_path in folder_paths:
-            if not folder_path.is_dir():
-                continue
+        self.detectShots()
+        self.extractShotData()
 
-            video_paths = folder_path.iterdir()
-
-            for video_path in video_paths:
-                self.detectShots(video_path)
-                self.extractShotData(video_path)
-        
         self.current_clip_index = 0
 
         print(f"Shot detection completed. Keyframes saved at {self.keyframe_output_path}. Metadata saved at {self.metadata_output_path}.")
 
-    def detectShots(self, video_path):
+    def detectShots(self):
         # Detect shots in a video and save keyframes and metadata
         # Save keyframes (as PNG's) into out/keyframes
         # Save metadata into out/metadata
-        
-        print(f"Extracting keyframes from video: {video_path}")                    
 
-        # Extract video name
-        video_name = video_path.stem
-        keyframes_save_path = os.path.join(self.keyframe_output_dir, video_name)
+        folder_paths = self.data_path.iterdir()
 
-        os.makedirs(keyframes_save_path, exist_ok=True)
+        for folder_path in folder_paths:
+            video_paths = folder_path.iterdir()
 
-        # ffmpeg command to detect shots
-        command = [
-            'ffmpeg',
-            '-i', video_path,
-            '-vf', f"select='eq(n\,0)+gt(scene,{self.scene_threshold})',showinfo",
-            '-vsync', 'vfr',
-            '-q:v', '2', 
-            '-frame_pts', 'true',
-            f'{keyframes_save_path}/{video_name}_%03d.png'
-        ]
-        
-        # Save metadata
-        metadata_file = os.path.join(self.metadata_output_path, f'{video_name}_metadata.txt')
+            for video_path in video_paths:
+                print(f"Extracting keyframes from video: {video_path}")                    
 
-        # Run ffmpeg command
-        with open(metadata_file, 'w') as f:
-            subprocess.run(command, stderr=f)
+                # Extract video name
+                video_name = video_path.stem
+                keyframes_save_path = os.path.join(self.keyframe_output_dir, video_name)
+
+                os.makedirs(keyframes_save_path, exist_ok=True)
+
+                # ffmpeg command to detect shots
+                command = [
+                    'ffmpeg',
+                    '-i', video_path,
+                    '-vf', f"select='eq(n\,0)+gt(scene,{self.scene_threshold})',showinfo",
+                    '-vsync', 'vfr',
+                    '-q:v', '2', 
+                    '-frame_pts', 'true',
+                    f'{keyframes_save_path}/{video_name}_%03d.png'
+                ]
+                
+                # Save metadata
+                metadata_file = os.path.join(self.metadata_output_path, f'{video_name}_metadata.txt')
+
+                # Run ffmpeg command
+                with open(metadata_file, 'w') as f:
+                    subprocess.run(command, stderr=f)
 
                    
-    def extractShotData(self, video_path):
-        # Read metadata file and write to human-readable csv
-        print(f"Processing metadata from video: {video_path}")                    
-
-        video_name = video_path.stem
-        metadata_file = os.path.join(self.metadata_output_path, f'{video_name}_metadata.txt')
-
+    def extractShotData(self):
+        # Read metadata files and write to human-readable csv
+        
+        # Write headers to csv file
+        with open(self.metadata_processed_path, 'a', newline='') as out_f:
+            csv_writer = csv.writer(out_f)
+            csv_writer.writerow(['video_name', 'frame_index', 'timestamp', 'pts_time', 'clip_index'])
+    
         sorted_keyframe_folders = sorted(self.keyframe_output_path.iterdir(),
                                         key=lambda x: self.keyframeFolderSortKey(x.stem))
         
         for keyframe_folder in sorted_keyframe_folders:
+            video_name = keyframe_folder.stem
+            metadata_file = os.path.join(self.metadata_output_path, f'{video_name}_metadata.txt')
+
+            print(f"Processing metadata from file: {metadata_file}")                    
+
             # Sort based on keyframe's frame index number
             keyframe_images = sorted(keyframe_folder.iterdir(),
                                     key=lambda x: self.getFrameIndex(x.stem))

@@ -1,9 +1,8 @@
-import torch
-import clip
 from PIL import Image
 from pathlib import Path
 import numpy as np
 import os
+from clipModel import CLIPModel
 
 class KeyframeEmbedder:
     data_dir = './out/keyframes'
@@ -11,9 +10,6 @@ class KeyframeEmbedder:
     combined_clip_embedding_dir = './out/combined_clip_embedding.npy'
 
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model, self.preprocess = clip.load("ViT-B/32", device=self.device)
-
         self.data_path = Path(self.data_dir)
         self.clip_embeddings_path = Path(self.clip_embeddings_dir)
 
@@ -32,16 +28,16 @@ class KeyframeEmbedder:
             sorted_keyframe_paths = sorted(keyframe_folder.iterdir(), key=lambda x: self.keyframeFileSortKey(x.stem))
 
             # Load videos
-            videos = [self.preprocess(Image.open(p)).unsqueeze(0).to(self.device) for p in sorted_keyframe_paths]
+            videos = [CLIPModel.preprocess(Image.open(p)).unsqueeze(0).to(self.device) for p in sorted_keyframe_paths]
 
             # Stack them into a tensor and concatenate
-            keyframe_images = torch.cat(videos, dim=0)
+            keyframe_images = CLIPModel.torch.cat(videos, dim=0)
 
             print(f"Loaded {keyframe_images.size(0)} keyframes")
 
             # Generate embeddings
-            with torch.no_grad():
-                image_features = self.model.encode_image(keyframe_images)
+            with CLIPModel.torch.no_grad():
+                image_features = CLIPModel.model.encode_image(keyframe_images)
 
             # Save embeddings with the folder name as a .npy file
             self.saveEmbeddings(image_features, keyframe_folder.stem)

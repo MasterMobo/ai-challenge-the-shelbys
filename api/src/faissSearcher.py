@@ -1,9 +1,7 @@
 import faiss
-import queryEncoder
 from config import *
 import numpy as np
 
-queryEncoder = queryEncoder.QueryEncoder()
 class FAISSSearcher:
     index_dir = "./out/faiss_index.index"
 

@@ -1,9 +1,4 @@
-import numpy as np
-import os
-import torch
-import clip
 import pandas as pd
-import config
 
 class ClipIndexLookup:
     def __init__(self):

@@ -16,7 +16,7 @@ class VideoSearcher:
         keyframeEmbeder.embedKeyframes()
 
         faissSearcher = FAISSSearcher() # Initialize the faiss searcher
-        faissSearcher.write_faiss_index(keyframeEmbeder.output_dir) # Write the faiss index
+        faissSearcher.write_faiss_index(keyframeEmbeder.combined_clip_embedding_dir) # Write the faiss index
 
         queryEncoder = QueryEncoder()  # Initialize the query encoder
         encoded_query = queryEncoder.textToEmbedding(query)  # Encode the query

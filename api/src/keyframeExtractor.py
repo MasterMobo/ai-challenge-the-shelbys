@@ -57,7 +57,10 @@ class KeyframeExtractor:
         print(f"Extracting keyframes from video: {video_path}")                    
 
         # Extract video name
-        video_name = "_".join(os.path.splitext(os.path.basename(video_path))[:1])
+        video_name = video_path.stem
+        keyframes_save_path = os.path.join(self.keyframe_output_dir, video_name)
+
+        os.makedirs(keyframes_save_path, exist_ok=True)
 
         # ffmpeg command to detect shots
         command = [
@@ -67,7 +70,7 @@ class KeyframeExtractor:
             '-vsync', 'vfr',
             '-q:v', '2', 
             '-frame_pts', 'true',
-            f'{self.keyframe_output_path}/{video_name}_%03d.png'
+            f'{keyframes_save_path}/{video_name}_%03d.png'
         ]
         
         # Save metadata
@@ -85,39 +88,51 @@ class KeyframeExtractor:
         video_name = video_path.stem
         metadata_file = os.path.join(self.metadata_output_path, f'{video_name}_metadata.txt')
 
-        # Sort based on keyframe's frame index number
-        keyframe_images = sorted([f for f in self.keyframe_output_path.iterdir() if f.stem.startswith(video_name)],
-                                 key=lambda x: self.getFrameIndex(x.name))
+        sorted_keyframe_folders = sorted(self.keyframe_output_path.iterdir(),
+                                        key=lambda x: self.keyframeFolderSortKey(x.stem))
         
-
-        # Read from metadata and write to .csv file
-        with open(metadata_file, 'r') as f, open(self.metadata_processed_path, 'a', newline='') as out_f:
-            csv_writer = csv.writer(out_f)
+        for keyframe_folder in sorted_keyframe_folders:
+            # Sort based on keyframe's frame index number
+            keyframe_images = sorted(keyframe_folder.iterdir(),
+                                    key=lambda x: self.getFrameIndex(x.stem))
             
-            pts_time_arr = []
 
-            # Find and append pts_time to pts_time_arr
-            for line in f:
-                if 'pts_time' in line:
-                    pts_time = float(line.split('pts_time:')[1].split(' ')[0])
-                    pts_time_arr.append(pts_time)
+            # Read from metadata and write to .csv file
+            with open(metadata_file, 'r') as f, open(self.metadata_processed_path, 'a', newline='') as out_f:
+                csv_writer = csv.writer(out_f)
+                
+                pts_time_arr = []
 
-            # Save to csv file
-            for i, keyframe_file in enumerate(keyframe_images):
-                frame_index = self.getFrameIndex(keyframe_file.name)
-                pts_time = pts_time_arr[i]
-                hours = int(pts_time // 3600)
-                minutes = int((pts_time % 3600) // 60)
-                seconds = pts_time % 60
-                timestamp = f"{hours:02d}:{minutes:02d}:{seconds:06.3f}"
-                clip_index = self.current_clip_index
+                # Find and append pts_time to pts_time_arr
+                for line in f:
+                    if 'pts_time' in line:
+                        pts_time = float(line.split('pts_time:')[1].split(' ')[0])
+                        pts_time_arr.append(pts_time)
 
-                self.current_clip_index += 1
+                # Save to csv file
+                for i, keyframe_file in enumerate(keyframe_images):
+                    frame_index = self.getFrameIndex(keyframe_file.stem)
+                    pts_time = pts_time_arr[i]
+                    hours = int(pts_time // 3600)
+                    minutes = int((pts_time % 3600) // 60)
+                    seconds = pts_time % 60
+                    timestamp = f"{hours:02d}:{minutes:02d}:{seconds:06.3f}"
+                    clip_index = self.current_clip_index
 
-                csv_writer.writerow([video_name, frame_index, timestamp, pts_time, clip_index])
+                    self.current_clip_index += 1
+
+                    csv_writer.writerow([video_name, frame_index, timestamp, pts_time, clip_index])
+
+    def keyframeFolderSortKey(self, filename):
+        parts = filename.split('_')
+        level = int(parts[0][1:])  # Extracting number after 'L'
+        video = int(parts[1][1:])  # Extracting number after 'V'
+        return (level, video)
 
     def getFrameIndex(self, videoName: str):
-        return int(videoName.split("_")[-1][:-4])
+        return int(videoName.split("_")[-1])
+
+    
 
 if (__name__ == "__main__"):
     # Usage example

@@ -1,6 +1,7 @@
 import faiss
 from config import *
 import numpy as np
+import os
 
 class FAISSSearcher:
     index_dir = "./out/faiss_index.index"
@@ -9,6 +10,12 @@ class FAISSSearcher:
         pass
     
     def write_faiss_index(self, combined_clip_embeddings_dir):
+        # Check if the index file already exists
+        if os.path.exists(self.index_dir):
+            print(f"Index file already exists at {self.index_dir}.")
+            print("Skipping indexing.")
+            return
+
         combined_clip_embeddings = np.load(combined_clip_embeddings_dir)
         normalized_embeddings = self.normalize_embeddings(combined_clip_embeddings)
 

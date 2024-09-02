@@ -1,13 +1,10 @@
 import pandas as pd
 
 class ClipIndexLookup:
-    def __init__(self):
+    def __init__(self, metadata_processed_dir):
+        self.df = pd.read_csv(metadata_processed_dir)
         pass
 
-    def load_clip_indexes(self, combined_map_keyframe_file ):
-        return pd.read_csv(combined_map_keyframe_file)
-
-    def look_up_clip_index(self, clip_index, combined_map_keyframe_file) -> pd.DataFrame:
-        df = self.load_clip_indexes(combined_map_keyframe_file)
-        result_frame = df[df['clip_index'] == clip_index] 
+    def look_up_clip_index(self, clip_index) -> pd.DataFrame:
+        result_frame = self.df[self.df['clip_index'] == clip_index] 
         return result_frame

@@ -23,6 +23,17 @@ class KeyframeExtractor:
     def processVideos(self):
         # Iterate through each video to extract keyframes and metadata
 
+        # Check if the output directories exist
+        if self.keyframe_output_path.exists():
+            print(f"Keyframe output directory already exists at {self.keyframe_output_path}.")
+            print("Skipping shot detection.")
+            return
+        
+        if self.metadata_output_path.exists():
+            print(f"Metadata output directory already exists at {self.metadata_output_path}.")
+            print("Skipping shot detection.")
+            return
+
         # Create directories if they don't exist
         os.makedirs(self.keyframe_output_path, exist_ok=True)
         os.makedirs(self.metadata_output_path, exist_ok=True)

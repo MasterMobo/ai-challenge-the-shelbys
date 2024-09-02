@@ -13,8 +13,22 @@ class KeyframeEmbedder:
     def __init__(self):
         self.data_path = Path(self.data_dir)
         self.clip_embeddings_path = Path(self.clip_embeddings_dir)
+        self.combined_clip_embedding_path = Path(self.combined_clip_embedding_dir)
 
     def embedKeyframes(self):
+        # Check if the output directory exists
+        if self.combined_clip_embedding_path.exists():
+            print(f"Combined clip embeddings already exists at {self.combined_clip_embedding_dir}.")
+            print("Skipping embedding.")
+            return
+        
+        if self.clip_embeddings_path.exists():
+            print(f"Clip embeddings directory already exists at {self.clip_embeddings_path}.")
+            print("Skipping embedding.")
+            return
+
+
+
         print(f"Embedding keyframes from {self.data_dir}")
 
         os.makedirs(self.clip_embeddings_dir, exist_ok=True)

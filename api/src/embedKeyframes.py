@@ -28,7 +28,7 @@ class KeyframeEmbedder:
             sorted_keyframe_paths = sorted(keyframe_folder.iterdir(), key=lambda x: self.keyframeFileSortKey(x.stem))
 
             # Load videos
-            videos = [CLIPModel.preprocess(Image.open(p)).unsqueeze(0).to(self.device) for p in sorted_keyframe_paths]
+            videos = [CLIPModel.preprocess(Image.open(p)).unsqueeze(0).to(CLIPModel.device) for p in sorted_keyframe_paths]
 
             # Stack them into a tensor and concatenate
             keyframe_images = CLIPModel.torch.cat(videos, dim=0)

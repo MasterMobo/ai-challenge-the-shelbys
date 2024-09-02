@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import os
 from clipModel import CLIPModel
+import torch
 
 class KeyframeEmbedder:
     data_dir = './out/keyframes'
@@ -36,7 +37,7 @@ class KeyframeEmbedder:
             print(f"Loaded {keyframe_images.size(0)} keyframes")
 
             # Generate embeddings
-            with CLIPModel.torch.no_grad():
+            with torch.no_grad():
                 image_features = CLIPModel.model.encode_image(keyframe_images)
 
             # Save embeddings with the folder name as a .npy file

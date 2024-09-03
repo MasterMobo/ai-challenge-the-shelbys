@@ -1,0 +1,12 @@
+services:
+    api:
+        build: ./api
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/app/data:r
+            - ./out:/app/out:w
+        environment:
+            - PYTHONUNBUFFERED=1
+        ports:
+            - "3000:3000"

@@ -1,12 +1,22 @@
+# Prerequisites
+
+Before you run the project, please make sure you have set up all the following:
+
+1.  This project uses Docker to run. If you have not installed Docker Desktop, please install from [here](https://www.docker.com/products/docker-desktop/).
+
+2.  At the root directory, create a `data` and `out` folder. Put all relevant data in the `data` folder. The `out` folder should be kept empty.
+
+3.  Make sure to open Docker Desktop before running. Otherwise, you will get an error saying Docker engine hasn't started yet.
+
 # Running the Project
 
 ```bash
-# Build Image
-docker build . -t ai-challenge
+# Run the services
+docker-compose up --build
 
-# Run container
-docker run --name ai-challenge ai-challenge
+# Stop the services
+docker-compose stop
 
-# Remove container
-docker rm -f ai-challenge
+# Remove the services
+docker-compose down
 ```

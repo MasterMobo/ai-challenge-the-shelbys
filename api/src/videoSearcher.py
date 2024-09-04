@@ -44,10 +44,13 @@ class VideoSearcher:
             for idx in indexes:
                 result = self.clipIndexLookup.look_up_clip_index(idx)
                 results.append(result)
-                print(result)
 
         # Concatenate all result DataFrames into a single DataFrame
         combined_results = pd.concat(results, ignore_index=True)
+
+        pd.set_option('display.max_columns', None)
+        print(combined_results)
+        pd.reset_option('display.max_columns')
 
         print(f"Search completed in {end_time - start_time:.2f} seconds")
 

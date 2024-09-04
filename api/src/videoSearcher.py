@@ -3,8 +3,10 @@ from embedKeyframes import KeyframeEmbedder
 from queryEncoder import QueryEncoder
 from faissSearcher import FAISSSearcher
 from clipIndex import ClipIndexLookup
+from writeResult import WriteResult
 import time
 import pandas as pd
+
 
 class VideoSearcher:
 
@@ -24,6 +26,7 @@ class VideoSearcher:
 
         self.clipIndexLookup = ClipIndexLookup(self.keyframeExtractor.metadata_processed_dir)
 
+        self.writeResult = WriteResult()
 
     def search(self, query: str):
         # Start timer
@@ -50,6 +53,8 @@ class VideoSearcher:
         combined_results = pd.concat(results, ignore_index=True)
 
         print(f"Search completed in {end_time - start_time:.2f} seconds")
+
+        # self.writeResult.write_to_csv(combined_results)
 
         return combined_results
 

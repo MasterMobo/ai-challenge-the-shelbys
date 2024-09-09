@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 
 class WriteResult:
-    submit_dir = './out/submit' #results are written in correct format, ready for submmission
+    submit_dir = './out/submission' #results are written in correct format, ready for submmission
     check_res_dir = './out/check_res'
    
     def __init__(self):

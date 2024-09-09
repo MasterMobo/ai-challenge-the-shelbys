@@ -3,6 +3,7 @@ import os, shutil
 import csv
 import pandas as pd
 from pathlib import Path
+import datetime import timdelta
 import math
 
 class KeyframeExtractor:
@@ -101,7 +102,8 @@ class KeyframeExtractor:
             middle_frame_index = int((cur_keyframe_index + next_keyframe_index) // 2)
             middle_frame_pts = middle_frame_index / 25 #float
             # hh:mm:ss
-            middle_frame_timestamp = f"{int(middle_frame_index // 3600)}:{int((middle_frame_index % 3600) // 60)}:{round(middle_frame_index % 60, 2)}"
+            middle_frame_timedelta = timdelta(seconds=middle_frame_pts)
+            middle_frame_timestamp = str(middle_frame_timedelta)
             
             # write result to mtdt csv 
             metadata_processed_df.at[i, 'middle_index'] = middle_frame_index

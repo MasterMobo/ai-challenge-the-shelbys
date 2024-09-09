@@ -48,7 +48,7 @@ class WriteResult:
         check_df = result_df[['video_name', 'frame_index', 'timestamp', 'middle_index','middle_timestamp']]
 
         check_res_file =  self.check_res_path / f'{output_file_name}_check.csv'
-        check_df.to_csv(check_res_file, header=True)
+        check_df.to_csv(check_res_file, header=True, index=False)
         
         print(f"Please double check results in {check_res_file}")
 

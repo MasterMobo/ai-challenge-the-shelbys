@@ -6,8 +6,12 @@ from pathlib import Path
 from datetime import datetime
 
 class WriteResult:
+<<<<<<< HEAD
     submit_dir = './out/submit' #results are written in correct format, ready for submmission
     check_res_dir = './out/check_res'
+=======
+    submit_dir = './out/submit'
+>>>>>>> 1f5bab9c71757a7eb8ffdf2e309196965764b308
    
     def __init__(self):
         self.submit_path = Path(self.submit_dir)  
@@ -15,11 +19,14 @@ class WriteResult:
         if not os.path.exists(self.submit_path):
             os.makedirs(self.submit_path, exist_ok=True)
 
+<<<<<<< HEAD
         self.check_res_path = Path(self.check_res_dir)  
 
         if not os.path.exists(self.check_res_dir):
             os.makedirs(self.check_res_dir, exist_ok=True)
 
+=======
+>>>>>>> 1f5bab9c71757a7eb8ffdf2e309196965764b308
     def write_to_csv(self, result_df: pd.DataFrame):
         # Write the results to a csv file
 
@@ -36,6 +43,7 @@ class WriteResult:
         month = time_of_query.month
         year = time_of_query.year
 
+<<<<<<< HEAD
         submit_file = self.submit_path / f'{hour:02d}h{minute:02d}m{second:02d}_{day:02d}_{month:02d}_{year:04d}.csv'
 
         # Write the results to a csv file
@@ -51,6 +59,14 @@ class WriteResult:
         
         print(f"Please double check results in {check_res_file}")
 
+=======
+        output_file = self.submit_path / f'{hour:02d}h{minute:02d}m{second:02d}_{day:02d}_{month:02d}_{year:04d}.csv'
+        
+        # Write the results to a csv file
+        answer_df.to_csv(output_file, index=False, header=False)
+
+        print(f"Results written to {output_file}")
+>>>>>>> 1f5bab9c71757a7eb8ffdf2e309196965764b308
 
 
 

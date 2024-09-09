@@ -33,7 +33,7 @@ class VideoSearcher:
         start_time = time.time()
 
         encoded_query = self.queryEncoder.textToEmbedding(query)  # Encode the query
-        result_distances, result_indices = self.faissSearcher.search_frames(encoded_query, top_k=5)
+        result_distances, result_indices = self.faissSearcher.search_frames(encoded_query, top_k=50)
 
         # End timer
         end_time = time.time()

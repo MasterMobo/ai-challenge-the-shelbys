@@ -1,12 +1,12 @@
-import React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
-import SearchBar from './sections/SearchBar';
-import Filters from './sections/Filters';
-import Results from './sections/Results';
+import React from "react";
+import { Container, Grid, Typography } from "@mui/material";
+import SearchBar from "./sections/SearchBar";
+import Filters from "./sections/Filters";
+import Results from "./sections/Results";
 
 export default function App() {
   return (
-    <Container maxWidth={false} maxHeight ={false}>
+    <Container maxWidth={false} maxHeight={false}>
       <SearchBar />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={3}>

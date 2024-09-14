@@ -28,16 +28,18 @@ class WriteResult:
 
         # Define the output file path
 
-        # time_of_query = datetime.now()
-        # hour = time_of_query.hour
-        # minute = time_of_query.minute
-        # second = time_of_query.second
-        # day = time_of_query.day
-        # month = time_of_query.month
-        # year = time_of_query.year
+        time_of_query = datetime.now()
+        hour = time_of_query.hour
+        minute = time_of_query.minute
+        second = time_of_query.second
+        day = time_of_query.day
+        month = time_of_query.month
+        year = time_of_query.year
 
-        # submit_file = self.submit_path / f'{hour:02d}h{minute:02d}m{second:02d}_{day:02d}_{month:02d}_{year:04d}.csv'
-        submit_file = self.submit_path / f'{output_file_name}.csv'
+        if output_file_name is None:
+            submit_file = self.submit_path / f'{hour:02d}h{minute:02d}m{second:02d}_{day:02d}_{month:02d}_{year:04d}.csv'
+        else:
+            submit_file = self.submit_path / f'{output_file_name}.csv'
 
         # Write the results to a csv file
         answer_df.to_csv(submit_file, index=False, header=False)
@@ -47,8 +49,11 @@ class WriteResult:
 
         check_df = result_df[['video_name', 'frame_index', 'timestamp', 'middle_index','middle_timestamp']]
 
-        check_res_file =  self.check_res_path / f'{output_file_name}_check.csv'
-        check_df.to_csv(check_res_file, header=True, index=False)
+
+        if output_file_name is None:
+            check_res_file =  self.check_res_path / f'{output_file_name}_check.csv'
+        else:
+            check_df.to_csv(check_res_file, header=True, index=False)
         
         print(f"Please double check results in {check_res_file}")
 

@@ -51,9 +51,11 @@ class WriteResult:
 
 
         if output_file_name is None:
-            check_res_file =  self.check_res_path / f'{output_file_name}_check.csv'
+            check_res_file = self.check_res_path / f'{hour:02d}h{minute:02d}m{second:02d}_{day:02d}_{month:02d}_{year:04d}.csv'
         else:
-            check_df.to_csv(check_res_file, header=True, index=False)
+            check_res_file = self.check_res_path / f'{output_file_name}_check.csv'
+
+        check_df.to_csv(check_res_file, header=True, index=False)
         
         print(f"Please double check results in {check_res_file}")
 

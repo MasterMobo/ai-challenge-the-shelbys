@@ -53,10 +53,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchBar({ setResults }) {
   const [query, setQuery] = useState(""); // State for search query
+  const [fileName, setFileName] = useState("");
 
   // Function to handle input changes
   const handleInputChange = (event) => {
     setQuery(event.target.value);
+  };
+
+  const handleFileNameChange = (event) => {
+    setFileName(event.target.value);
   };
 
   // Function to handle search action
@@ -69,11 +74,11 @@ export default function SearchBar({ setResults }) {
     try {
       // const response = await axios.get(`http://127.0.0.1:3000/search?query=${query}&out=${out}`);
       const response = await axios.get(
-        `http://127.0.0.1:3000/search?query=${query}`
+        `http://127.0.0.1:3000/search?query=${query}&out=${fileName}`
       );
 
       // Check the response data
-      // console.log('Search results:', response.data);
+      console.log('Search results:', response.data);
       setResults(response.data);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -126,6 +131,19 @@ export default function SearchBar({ setResults }) {
                 onChange={handleInputChange} // Update state on input change
               />
             </Search>
+
+            <Search sx={{ marginRight: 2, width: "100%" }}>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Enter file name…"
+                inputProps={{ "aria-label": "search" }}
+                value={fileName} // Bind input value to state
+                onChange={handleFileNameChange} // Update state on filename change
+              />
+            </Search>
+
             <Button //search button
               sx={{ borderRadius: "50px" }}
               variant="contained"

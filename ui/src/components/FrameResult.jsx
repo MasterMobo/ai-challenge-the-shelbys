@@ -6,7 +6,9 @@ import VideoPlayer from "./VideoPlayer"; // Import the component you want to sho
 function FrameResult({
   rank,
   videoNo,
+  frameIndex,
   timestamp,
+  humanTimestamp,
   thumbnails,
   simScore,
   objects,
@@ -34,7 +36,7 @@ function FrameResult({
       sx={{ border: "1px solid #ddd", padding: "16px", borderRadius: "8px" }}
     >
       <Slider {...settings}>
-        {thumbnails.map((thumbnail, index) => (
+        {thumbnails && thumbnails.map((thumbnail, index) => (
           <div key={index}>
             <img
               src={thumbnail}
@@ -44,11 +46,12 @@ function FrameResult({
           </div>
         ))}
       </Slider>
-
+      <VideoPlayer videoUrl={videoUrl} seekTime={timestamp} />
       <Typography variant="h6">Rank: {rank}</Typography>
       <Typography variant="body2">Video No: {videoNo}</Typography>
-      <Typography variant="body2">Timestamp: {timestamp}</Typography>
-      <Typography variant="body2">Similarity Score: {simScore}</Typography>
+      <Typography variant="body2">Frame Index: {frameIndex}</Typography>
+      <Typography variant="body2">Timestamp: {humanTimestamp}</Typography>
+      {/* <Typography variant="body2">Similarity Score: {simScore}</Typography> */}
       <Typography variant="body2">Objects: {objects}</Typography>
 
       {/* Button to trigger modal */}
@@ -69,8 +72,8 @@ function FrameResult({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "90%",
-            maxWidth: "700px",
+            width: "50%",
+            maxWidth: "100%",
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
@@ -79,7 +82,6 @@ function FrameResult({
         >
           {/* Display the VideoPlayer component inside the modal */}
           <VideoPlayer videoUrl={videoUrl} seekTime={timestamp} />
-
           {/* Button to close the modal */}
           <Button
             onClick={handleClose}

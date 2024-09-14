@@ -12,28 +12,26 @@ function Results({ results }) {
         height: "calc(100vh - 72px)",
       }}
     >
-      <Typography variant="h6">
-        Retrieval results for: Santa Claus waving
-      </Typography>
-      <Typography variant="subtitle1">Filters applied:</Typography>
 
       <Grid container spacing={2}>
-        {results.map((result) => (
-          <Grid item xs={12} sm={6} md={4} key={result.rank}>
+        {results && results.map((result, key) => {
+          let folder_name = result.video_name.split("_")[0]; 
+          return (<Grid item xs={12} sm={6} md={4} key={result.rank}>
             <FrameResult
-              rank={result.rank}
-              videoNo={result.videoNo}
-              timestamp={result.timestamp}
+              rank={key + 1}
+              videoNo={result.video_name}
+              frameIndex={result.frame_index}
+              timestamp={result.pts_time}
+              humanTimestamp={result.timestamp}
               thumbnails={result.thumbnails}
               simScore={result.simScore}
               objects={result.objects}
-              videoUrl={"../../public/videos/" + result.videoNo + ".mp4"}
+              videoUrl={"../../public/videos/Videos_" + folder_name + "/" + result.video_name + ".mp4"}
             />
-          </Grid>
-        ))}
+          </Grid>)}
+        )}
       </Grid>
-    </Box>
-  );
-}
+    </Box>);
+    };
 
 export default Results;

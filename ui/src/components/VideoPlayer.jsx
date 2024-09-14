@@ -9,19 +9,19 @@ function VideoPlayer({ videoUrl, seekTime }) {
   const handleSeek = () => {
     if (playerRef.current) {
       // Seek to 30 seconds
-      playerRef.current.seekTo(100, "seconds");
+      playerRef.current.seekTo(seekTime, "seconds");
     }
   };
 
   return (
     <Box
-      sx={{ padding: "16px", borderRadius: "8px", border: "1px solid #ddd" }}
+      sx={{ padding: "5px", borderRadius: "8px", border: "1px solid #ddd", maxWidth: "100%", }}
     >
-      <Typography variant="h6">Video Player</Typography>
       <ReactPlayer
         url={videoUrl}
         onStart={handleSeek}
         ref={playerRef}
+        width="100%"
         controls
       />
     </Box>

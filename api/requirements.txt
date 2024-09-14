@@ -19,3 +19,4 @@ typing-extensions==4.12.2
 wcwidth==0.2.13
 pandas
 Flask
+flask-cors

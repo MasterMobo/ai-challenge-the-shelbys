@@ -18,7 +18,7 @@ const Search = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   width: "100%",
-  maxWidth: "400px",
+  maxWidth: "200px",
   [theme.breakpoints.up("sm")]: {
     width: "auto",
     maxWidth: "600px",
@@ -29,20 +29,24 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
+  // padding: theme.spacing(0, 2),
+  padding: theme.spacing(0, 1, 1, 1),
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  paddingRight: `calc(2em + ${theme.spacing(4)})`
+
 }));
+
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: `calc(${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
@@ -50,6 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 
 export default function SearchBar({ setResults }) {
   const [query, setQuery] = useState(""); // State for search query
@@ -114,43 +119,47 @@ export default function SearchBar({ setResults }) {
 
           <Box
             sx={{
+              // flexDirection: 'column',
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexGrow: 1,
             }}
           >
-            <Search sx={{ marginRight: 2, width: "100%" }}>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Enter text query…"
-                inputProps={{ "aria-label": "search" }}
-                value={query} // Bind input value to state
-                onChange={handleInputChange} // Update state on input change
-              />
-            </Search>
+              <Search sx={{ marginRight: 2, width: "100%", maxWidth: "400px" }}>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
 
-            <Search sx={{ marginRight: 2, width: "100%" }}>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Enter file name…"
-                inputProps={{ "aria-label": "search" }}
-                value={fileName} // Bind input value to state
-                onChange={handleFileNameChange} // Update state on filename change
-              />
-            </Search>
+                <StyledInputBase sx={{ marginLeft: 1 }}
+                  placeholder="Enter text query…"
+                  inputProps={{ "aria-label": "search" }}
+                  value={query} // Bind input value to state
+                  onChange={handleInputChange} // Update state on input change
+                />
+              </Search>
 
-            <Button //search button
-              sx={{ borderRadius: "50px" }}
-              variant="contained"
-              onClick={handleSearch} // Trigger search on button click
-            >
-              Search
-            </Button>
+
+              <Search sx={{ marginRight: 2, width: "100%"}}>
+                <StyledInputBase
+                  placeholder="Enter file name…"
+                  inputProps={{ "aria-label": "search" }}
+                  sx={{ maxWidth: "200px" }} 
+                  value={fileName} // Bind input value to state
+                  onChange={handleFileNameChange} // Update state on filename change
+                />
+              </Search>
+
+              <Button //search button
+                sx={{ borderRadius: "50px" }}
+                variant="contained"
+                onClick={handleSearch} // Trigger search on button click
+              >
+                Search
+              </Button>
+
+
+
           </Box>
         </Toolbar>
       </AppBar>
